@@ -1,0 +1,49 @@
+plugins {
+    // 26.x surumleri obfuscate edilmemis oldugu icin remap yapmayan Loom kullanilir.
+    // Surum settings.gradle icinde (loom_version) belirlenir.
+    id 'net.fabricmc.fabric-loom'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    maven { url = 'https://maven.terraformersmc.com/releases/' }  // Mod Menu
+    maven { url = 'https://maven.shedaniel.me/' }                 // Cloth Config
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    // 26.1+ icin mappings satiri yok (oyun zaten obfuscate degil)
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // ESC > Mods menusu + ayar ekrani
+    implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    implementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+def javaVer = Integer.parseInt(project.java_version)
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = javaVer
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.toVersion(javaVer)
+    targetCompatibility = JavaVersion.toVersion(javaVer)
+}

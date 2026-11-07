@@ -1,0 +1,11 @@
+pluginManagement {
+    repositories {
+        maven { url = 'https://maven.fabricmc.net/' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    plugins {
+        // Surum gradle.properties icindeki loom_version'dan gelir
+        id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    }
+}

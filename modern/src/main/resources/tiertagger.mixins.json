@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.tiertagger.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "EntityNameMixin",
+    "PlayerNameMixin",
+    "PlayerTabOverlayMixin",
+    "SelfLabelMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
