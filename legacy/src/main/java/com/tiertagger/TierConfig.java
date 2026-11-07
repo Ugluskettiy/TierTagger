@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -23,7 +25,7 @@ public class TierConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("tiertagger.json");
 
-    public static final String[] MODES = {"none", "crystal", "sword", "axe", "pickaxe", "uhc", "pot", "netherite", "mace"};
+    public static final String[] MODES = {"none", "crystal", "sword", "smp", "mace", "uhc", "pot", "netherite", "vanilla"};
     public static final String[] STYLES = {"left", "right"};
 
     public static class Data {
@@ -72,14 +74,21 @@ public class TierConfig {
         return (t == null || t.isBlank()) ? null : t;
     }
 
-    private static Formatting colorFor(String tier) {
+    /** HT1..LT5 renkleri (RGB). LT ile baslayanlar koyu ton, digerleri parlak ton. */
+    private static int colorFor(String tier) {
         String t = tier.toUpperCase(Locale.ROOT);
-        if (t.endsWith("1")) return Formatting.GOLD;
-        if (t.endsWith("2")) return Formatting.YELLOW;
-        if (t.endsWith("3")) return Formatting.GREEN;
-        if (t.endsWith("4")) return Formatting.AQUA;
-        if (t.endsWith("5")) return Formatting.GRAY;
-        return Formatting.WHITE;
+        boolean low = t.startsWith("LT");
+        switch (t.charAt(t.length() - 1)) {
+            case '1': return low ? 0xD5B355 : 0xFFCF4A;
+            case '2': return low ? 0x888D95 : 0xA4B3C7;
+            case '3': return low ? 0xB36830 : 0xDD8849;
+            case '4': case '5': return 0x655B79;
+            default: return 0xFFFFFF;
+        }
+    }
+
+    private static Text rgb(String s, int color) {
+        return Text.literal(s).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color)));
     }
 
     /** Ikon, mod icindeki font'a (assets/minecraft/font/default.json) eklenen ozel karakterlerdir. */
@@ -88,12 +97,12 @@ public class TierConfig {
         switch (mode.toLowerCase(Locale.ROOT)) {
             case "crystal": return "";
             case "sword": return "";
-            case "axe": return "";
-            case "pickaxe": return "";
+            case "smp": case "axe": case "shield": return "";
+            case "mace": return "";
             case "uhc": case "heart": return "";
             case "pot": case "potion": return "";
-            case "netherite": case "nethpot": case "shield": return "";
-            case "mace": return "";
+            case "netherite": case "nethpot": return "";
+            case "vanilla": case "pickaxe": return "";
             default: return null;
         }
     }
@@ -120,11 +129,11 @@ public class TierConfig {
         String t = tier.toUpperCase(Locale.ROOT);
         MutableText out = Text.empty();
         if ("right".equalsIgnoreCase(data.style)) {
-            out.append(original).append(lit(" | ", Formatting.DARK_GRAY)).append(lit(t, colorFor(t)));
+            out.append(original).append(lit(" | ", Formatting.DARK_GRAY)).append(rgb(t, colorFor(t)));
             if (icon != null) out.append(lit(" ", Formatting.WHITE)).append(lit(icon, Formatting.WHITE));
         } else {
             if (icon != null) out.append(lit(icon, Formatting.WHITE)).append(lit(" ", Formatting.WHITE));
-            out.append(lit(t, colorFor(t))).append(lit(" | ", Formatting.DARK_GRAY)).append(original);
+            out.append(rgb(t, colorFor(t))).append(lit(" | ", Formatting.DARK_GRAY)).append(original);
         }
         return out;
     }

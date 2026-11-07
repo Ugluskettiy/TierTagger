@@ -14,7 +14,7 @@ ESC > Mods (Mod Menu) > Tier Tagger > ayar simgesi. Genel ayarlar (acik/kapali, 
 ve "Oyuncular" sekmesi (her satir: `isim tier [mod]`, ornek `Steve HT1 sword`).
 Mod Menu ve Cloth Config kurulu olmali.
 
-Mod ikonlari: crystal, sword, axe, pickaxe, uhc, pot, netherite, mace (none = ikonsuz).
+Mod ikonlari: crystal, sword, smp, mace, uhc, pot, netherite, vanilla (none = ikonsuz).
 
 ## Komutlar (sohbette)
 - `/tiertagger set <oyuncu> <tier> [mod]`  ornek: `/tiertagger set Steve HT1 sword`
@@ -42,6 +42,6 @@ Minecraft 26.1'de oyun obfuscate edilmemis hale geldi ve Fabric, Yarn mappings'i
 ## Onemli notlar
 - Hicbir kisim derlenip Minecraft'ta denenmedi; ilk derlemede kucuk duzeltmeler gerekebilir.
 - Ikonlar mod icindeki font'a (`assets/minecraft/font/default.json`) eklenen ozel karakterlerdir;
-  ikonlari degistirmek icin `assets/tiertagger/textures/font/icons.png` (8 ikon, 8x8) dosyasini duzenle.
+  ikonlari degistirmek icin `assets/tiertagger/textures/font/icons.png` (8 ikon, her biri 32x32) dosyasini duzenle.
 - Tek oyunculu modda yerel sunucu da ayni JVM'de calistigi icin etiket oyun ici mesajlarda da
   gorunebilir; yine sadece sana.
